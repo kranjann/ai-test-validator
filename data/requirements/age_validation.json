@@ -1,0 +1,10 @@
+{
+  "requirement_id": "REQ-001",  
+  "requirement": "Patient age must be between 18 and 60.",
+  "ground_truth": [
+    "Verify age 18 is accepted",
+    "Verify age 60 is accepted",
+    "Verify age below 18 is rejected",
+    "Verify age above 60 is rejected"
+  ]
+}

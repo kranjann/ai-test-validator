@@ -1,0 +1,10 @@
+{
+  "requirement_id": "REQ-003",
+  "requirement": "Medication dosage must not exceed 500mg per day.",
+  "ground_truth": [
+    "Verify dosage of 500mg is accepted",
+    "Verify dosage below 500mg is accepted",
+    "Verify dosage above 500mg is rejected",
+    "Verify null dosage is handled correctly"
+  ]
+}
