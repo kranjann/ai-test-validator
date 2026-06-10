@@ -1,0 +1,10 @@
+{
+  "requirement_id": "REQ-002",
+  "requirement": "Only patients with active insurance can proceed to consultation.",
+  "ground_truth": [
+    "Verify patient with active insurance can proceed",
+    "Verify patient with inactive insurance is blocked",
+    "Verify patient with expired insurance is blocked",
+    "Verify missing insurance information is handled correctly"
+  ]
+}

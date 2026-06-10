@@ -1,0 +1,10 @@
+{
+  "requirement_id": "REQ-004",
+  "requirement": "Appointments can only be scheduled during clinic hours from 9 AM to 5 PM.",
+  "ground_truth": [
+    "Verify appointment at 9 AM is accepted",
+    "Verify appointment at 5 PM is accepted",
+    "Verify appointment before 9 AM is rejected",
+    "Verify appointment after 5 PM is rejected"
+  ]
+}

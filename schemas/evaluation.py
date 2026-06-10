@@ -1,7 +1,9 @@
 from pydantic import BaseModel
-from typing import List
 
 
-class Requirement(BaseModel):
-    requirement: str
-    ground_truth: List[str]
+class EvaluationResult(BaseModel):
+    similarity_score: float
+    coverage_score: float
+    hallucination_detected: bool
+    overall_score: float
+    explanation: str = ""

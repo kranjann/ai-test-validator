@@ -1,0 +1,10 @@
+{
+  "requirement_id": "REQ-005",
+  "requirement": "Users must provide valid credentials to access patient records.",
+  "ground_truth": [
+    "Verify access granted with valid credentials",
+    "Verify access denied with invalid username",
+    "Verify access denied with invalid password",
+    "Verify access denied when credentials are missing"
+  ]
+}
