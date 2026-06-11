@@ -28,9 +28,14 @@ class Evaluator:
         if expected_count == 0:
             return 0.0
 
-        return (
+        coverage_score = (
             generated_count / expected_count
         ) * 100
+
+        return min(
+            coverage_score,
+            100.0
+        )
 
     def calculate_similarity_score(
         self,
@@ -125,20 +130,85 @@ class Evaluator:
 
         return False
 
+    def calculate_overall_score(
+        self,
+        coverage_score: float,
+        similarity_score: float,
+        hallucination_detected: bool
+    ) -> float:
+
+        score = (
+            coverage_score +
+            similarity_score
+        ) / 2
+
+        if hallucination_detected:
+
+            score -= 25
+
+        return max(
+            score,
+            0.0
+        )
+
+    def generate_root_cause(
+        self,
+        coverage_score: float,
+        similarity_score: float,
+        hallucination_detected: bool
+    ) -> str:
+
+        if coverage_score == 0:
+
+            return (
+                "No test cases were generated "
+                "for the requirement."
+            )
+
+        if hallucination_detected:
+
+            return (
+                "Generated output contains "
+                "hallucinated test cases "
+                "unrelated to the requirement."
+            )
+
+        if similarity_score < 70:
+
+            return (
+                "Generated test cases do not "
+                "closely match the ground truth."
+            )
+
+        if coverage_score < 100:
+
+            return (
+                "Generated output does not "
+                "cover all expected scenarios."
+            )
+
+        return (
+            "Evaluation completed successfully."
+        )
+
     def evaluate(
         self,
         requirement: Requirement,
         generated: GeneratedTestCase
     ) -> EvaluationResult:
 
-        coverage_score = self.calculate_coverage_score(
-            requirement,
-            generated
+        coverage_score = (
+            self.calculate_coverage_score(
+                requirement,
+                generated
+            )
         )
 
-        similarity_score = self.calculate_similarity_score(
-            requirement,
-            generated
+        similarity_score = (
+            self.calculate_similarity_score(
+                requirement,
+                generated
+            )
         )
 
         hallucination_detected = (
@@ -149,13 +219,29 @@ class Evaluator:
         )
 
         overall_score = (
-            coverage_score + similarity_score
-        ) / 2
+            self.calculate_overall_score(
+                coverage_score,
+                similarity_score,
+                hallucination_detected
+            )
+        )
+
+        root_cause = (
+            self.generate_root_cause(
+                coverage_score,
+                similarity_score,
+                hallucination_detected
+            )
+        )
 
         return EvaluationResult(
             similarity_score=similarity_score,
             coverage_score=coverage_score,
             hallucination_detected=hallucination_detected,
             overall_score=overall_score,
-            explanation="Coverage, similarity and hallucination evaluation completed"
+            explanation=(
+                "Coverage, similarity and "
+                "hallucination evaluation completed"
+            ),
+            root_cause=root_cause
         )
