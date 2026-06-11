@@ -28,8 +28,7 @@ class TestCaseGenerator:
                     f"Verify value {min_value} is accepted",
                     f"Verify value {max_value} is accepted",
                     f"Verify value below {min_value} is rejected",
-                    f"Verify value above {max_value} is rejected",
-                    "Verify insurance policy is active"
+                    f"Verify value above {max_value} is rejected"                    
                 ])
 
         return GeneratedTestCase(
