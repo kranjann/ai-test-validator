@@ -7,3 +7,4 @@ class EvaluationResult(BaseModel):
     hallucination_detected: bool
     overall_score: float
     explanation: str = ""
+    root_cause: str = ""
