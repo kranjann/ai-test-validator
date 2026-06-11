@@ -1,9 +1,15 @@
+from services.similarity_service import SimilarityService
+
 from schemas.evaluation import EvaluationResult
 from schemas.generated_test_case import GeneratedTestCase
 from schemas.requirement import Requirement
 
 
 class Evaluator:
+
+    def __init__(self):
+
+        self.similarity_service = SimilarityService()
 
     def calculate_coverage_score(
         self,
@@ -32,7 +38,46 @@ class Evaluator:
         generated: GeneratedTestCase
     ) -> float:
 
-        return 0.0
+        scores = []
+
+        for generated_tc in generated.test_cases:
+
+            generated_embedding = (
+                self.similarity_service.generate_embedding(
+                    generated_tc
+                )
+            )
+
+            best_score = 0.0
+
+            for ground_truth_tc in requirement.ground_truth:
+
+                ground_truth_embedding = (
+                    self.similarity_service.generate_embedding(
+                        ground_truth_tc
+                    )
+                )
+
+                similarity = (
+                    self.similarity_service.calculate_similarity(
+                        generated_embedding,
+                        ground_truth_embedding
+                    )
+                )
+
+                best_score = max(
+                    best_score,
+                    similarity
+                )
+
+            scores.append(best_score)
+
+        if not scores:
+            return 0.0
+
+        return (
+            sum(scores) / len(scores)
+        ) * 100
 
     def evaluate(
         self,
@@ -50,12 +95,14 @@ class Evaluator:
             generated
         )
 
-        overall_score = coverage_score
+        overall_score = (
+            coverage_score + similarity_score
+        ) / 2
 
         return EvaluationResult(
             similarity_score=similarity_score,
             coverage_score=coverage_score,
             hallucination_detected=False,
             overall_score=overall_score,
-            explanation="Coverage evaluation completed"
+            explanation="Coverage and similarity evaluation completed"
         )
